@@ -87,6 +87,8 @@
 							<filters>
 								<param>exclude:^.*\/\..+$</param>	
 								<param>exclude:^.*\/target\/.*$</param>
+								<param>exclude:^.*\/binary\/.*$</param>
+								<param>exclude:^.*\/gen\/.*$</param>
 								<param>include:^.*$</param>
 							</filters>
 						</configuration>

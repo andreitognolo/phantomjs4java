@@ -500,4 +500,10 @@ public class Util {
 		}
 	}
 
+	public static void close(Process p) {
+		if(p != null) {
+			p.destroy();
+		}
+	}
+
 }
