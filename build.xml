@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+
+<project name="phantomjs4java" default="all" basedir=".">
+
+	<property environment="env" />
+
+	<target name="all" depends="">
+		<echo>try: ant -p</echo>
+	</target>
+
+	<target name="install-phantomjs" depends="proxy" description="Install phantomjs">
+		<!--
+		<delete dir="gen/phantomjs" />
+		<mkdir dir="gen/phantomjs" />
+		-->
+		<parallel>
+			<sequential>
+				<!--
+				<get dest="gen/phantomjs/phantomjs-linux-i686.tar.bz2" src="https://phantomjs.googlecode.com/files/phantomjs-${phantomjs.version}-linux-i686.tar.bz2" />
+				-->
+				<untar dest="gen/phantomjs/phantomjs-linux-i686" src="gen/phantomjs/phantomjs-linux-i686.tar.bz2" compression="bzip2" />
+				<copy file="gen/phantomjs/phantomjs-linux-i686/phantomjs-1.9.1-linux-i686/bin/phantomjs" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-i686"/>
+			</sequential>
+		</parallel>
+	</target>
+
+	<target name="proxy" if="proxyHost">
+		<!-- <echo>Using proxy ${proxyUser}:x@${proxyHost}:${proxyPort}</echo> <setproxy proxyhost="${proxyHost}" proxyport="${proxyPort}" proxyuser="${proxyUser}" proxypassword="${proxyPass}" 
+			/> -->
+	</target>
+
+
+</project>
