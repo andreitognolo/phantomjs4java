@@ -8,18 +8,47 @@
 		<echo>try: ant -p</echo>
 	</target>
 
-	<target name="install-phantomjs" depends="proxy" description="Install phantomjs">
-		<!--
+	<target name="install-phantomjs" depends="proxy" description="Install phantomjs. Sample: -Dphantomjs.version=1.9.1">
 		<delete dir="gen/phantomjs" />
 		<mkdir dir="gen/phantomjs" />
-		-->
 		<parallel>
 			<sequential>
-				<!--
 				<get dest="gen/phantomjs/phantomjs-linux-i686.tar.bz2" src="https://phantomjs.googlecode.com/files/phantomjs-${phantomjs.version}-linux-i686.tar.bz2" />
-				-->
 				<untar dest="gen/phantomjs/phantomjs-linux-i686" src="gen/phantomjs/phantomjs-linux-i686.tar.bz2" compression="bzip2" />
-				<copy file="gen/phantomjs/phantomjs-linux-i686/phantomjs-1.9.1-linux-i686/bin/phantomjs" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-i686"/>
+			</sequential>
+			<sequential>
+				<get dest="gen/phantomjs/phantomjs-linux-x86_64.tar.bz2" src="https://phantomjs.googlecode.com/files/phantomjs-${phantomjs.version}-linux-x86_64.tar.bz2" />
+				<untar dest="gen/phantomjs/phantomjs-linux-x86_64" src="gen/phantomjs/phantomjs-linux-x86_64.tar.bz2" compression="bzip2" />
+			</sequential>
+			<sequential>
+				<get dest="gen/phantomjs/phantomjs-macosx.zip" src="https://phantomjs.googlecode.com/files/phantomjs-${phantomjs.version}-macosx.zip" />
+				<unzip dest="gen/phantomjs/phantomjs-macosx" src="gen/phantomjs/phantomjs-macosx.zip" />
+			</sequential>
+			<sequential>
+				<get dest="gen/phantomjs/phantomjs-windows.zip" src="https://phantomjs.googlecode.com/files/phantomjs-${phantomjs.version}-windows.zip" />
+				<unzip dest="gen/phantomjs/phantomjs-windows" src="gen/phantomjs/phantomjs-windows.zip" />
+			</sequential>
+		</parallel>
+		<delete dir="phantomjs4java-api/src/main/resources/phantomjs4java/binary" />
+		<mkdir dir="phantomjs4java-api/src/main/resources/phantomjs4java/binary" />
+		<parallel>
+			<sequential>
+				<copy file="gen/phantomjs/phantomjs-linux-i686/phantomjs-${phantomjs.version}-linux-i686/bin/phantomjs" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-i686" />
+				<chmod perm="u+x" file="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-i686" />
+			</sequential>
+			<sequential>
+				<copy file="gen/phantomjs/phantomjs-linux-x86_64/phantomjs-${phantomjs.version}-linux-x86_64/bin/phantomjs" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-x86_64" />
+				<chmod perm="u+x" file="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-linux-x86_64" />
+			</sequential>
+			<sequential>
+				<copy file="gen/phantomjs/phantomjs-macosx/phantomjs-${phantomjs.version}-macosx/bin/phantomjs" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-macosx" />
+				<chmod perm="u+x" file="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-macosx" />
+			</sequential>
+			<sequential>
+				<copy file="gen/phantomjs/phantomjs-windows/phantomjs-${phantomjs.version}-windows/phantomjs.exe" tofile="phantomjs4java-api/src/main/resources/phantomjs4java/binary/phantomjs-windows.exe" />
+			</sequential>
+			<sequential>
+				<echo message="p4j.phantomjs.version=${phantomjs.version}${line.separator}" file="phantomjs4java-api/src/main/resources/phantomjs4java/binary/p4j.phantomjs.properties" />
 			</sequential>
 		</parallel>
 	</target>
