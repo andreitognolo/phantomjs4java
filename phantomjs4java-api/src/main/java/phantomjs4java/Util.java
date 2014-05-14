@@ -456,16 +456,23 @@ public class Util {
 		return ret;
 	}
 
-	public static void write(File file, String data) {
+	private static void write(File file, String data, String charset) {
 		Writer out = null;
 		try {
-			out = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
+			if (charset == null) {
+				charset = "utf-8";
+			}
+			out = new OutputStreamWriter(new FileOutputStream(file), charset);
 			out.write(data);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
 			close(out);
 		}
+	}
+
+	public static void write(File file, String data) {
+		write(file, data, null);
 	}
 
 	public static String stringfyStackTrace(Exception e) {
@@ -501,9 +508,33 @@ public class Util {
 	}
 
 	public static void close(Process p) {
-		if(p != null) {
+		if (p != null) {
 			p.destroy();
 		}
 	}
 
+	public static File writeTempFile(String data, String charset) {
+		try {
+			File ret = File.createTempFile("p4j-script", ".tmp");
+			write(ret, data, charset);
+			return ret;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void copyAll(Reader reader, StringBuilder out) {
+		try {
+			char[] buffer = new char[1024 * 10];
+			int read = 0;
+			do {
+				read = reader.read(buffer);
+				if (read >= 0) {
+					out.append(buffer, 0, read);
+				}
+			} while (read >= 0);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
