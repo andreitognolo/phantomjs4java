@@ -48,8 +48,12 @@ public class PhantomJS {
 		File script = new File(file);
 		StringBuilder out = new StringBuilder();
 		StringBuilder err = new StringBuilder();
-		ExecUtil.execAndWait(new String[] { installer.getExecutable(), script.getPath() }, out, err);
+		ExecUtil.execAndWaitSuccess(new String[] { installer.getExecutable(), script.getPath() }, out, err);
 		return out.toString();
+	}
+
+	public PhantomJSInstaller getInstaller() {
+		return installer;
 	}
 
 }

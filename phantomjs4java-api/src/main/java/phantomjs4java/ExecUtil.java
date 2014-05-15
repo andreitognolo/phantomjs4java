@@ -30,20 +30,25 @@ public class ExecUtil {
 		}
 	}
 
-	public static void execAndWait(String[] cmds, StringBuilder out, StringBuilder err) {
+	public static void execAndWaitSuccess(String[] cmds, StringBuilder out, StringBuilder err) {
+		int code = execAndWait(cmds, out, err);
+		if (code != 0) {
+			throw new RuntimeException("exec error: " + code);
+		}
+	}
+
+	public static int execAndWait(String[] cmds, StringBuilder out, StringBuilder err) {
 		Process p = null;
 		Reader stdout = null;
 		Reader stderr = null;
 		try {
 			p = Runtime.getRuntime().exec(cmds);
 			int code = p.waitFor();
-			if (code != 0) {
-				throw new RuntimeException("exec error: " + code);
-			}
 			stdout = new InputStreamReader(p.getInputStream(), "utf-8");
 			stderr = new InputStreamReader(p.getInputStream(), "utf-8");
 			Util.copyAll(stdout, out);
 			Util.copyAll(stderr, err);
+			return code;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (InterruptedException e) {

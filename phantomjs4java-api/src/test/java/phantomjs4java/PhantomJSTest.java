@@ -19,6 +19,8 @@ public class PhantomJSTest {
 		assertEquals("ccc", phantomjs.source(file.getPath()).trim());
 		assertTrue(file.exists());
 		file.delete();
+
+		phantomjs.getInstaller().killAll();
 	}
 
 }
