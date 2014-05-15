@@ -34,17 +34,22 @@ public class PhantomJS {
 		File scriptFile = Util.writeTempFile(script, "utf-8");
 		scriptFile.deleteOnExit();
 		try {
-			StringBuilder out = new StringBuilder();
-			StringBuilder err = new StringBuilder();
-			ExecUtil.execAndWait(new String[] { installer.getExecutable(), scriptFile.getPath() }, out, err);
-			return out.toString();
+			return source(scriptFile.getPath());
 		} finally {
 			try {
 				scriptFile.delete();
 			} catch (Exception e) {
-				LOG.error("error deleting script: " + scriptFile);
+				LOG.error("error deleting script: " + script);
 			}
 		}
+	}
+
+	public String source(String file) {
+		File script = new File(file);
+		StringBuilder out = new StringBuilder();
+		StringBuilder err = new StringBuilder();
+		ExecUtil.execAndWait(new String[] { installer.getExecutable(), script.getPath() }, out, err);
+		return out.toString();
 	}
 
 }
