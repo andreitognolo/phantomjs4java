@@ -30,33 +30,51 @@ public class ExecUtil {
 		}
 	}
 
-	public static void execAndWaitSuccess(String[] cmds, StringBuilder out, StringBuilder err) {
-		int code = execAndWait(cmds, out, err);
+	public static void execAndWaitSuccess(String[] cmds, StringBuilder out, StringBuilder err, Long timeout) {
+		int code = execAndWait(cmds, out, err, timeout);
 		if (code != 0) {
 			throw new RuntimeException("exec error: " + code);
 		}
 	}
 
-	public static int execAndWait(String[] cmds, StringBuilder out, StringBuilder err) {
+	public static int execAndWait(String[] cmds, StringBuilder out, StringBuilder err, Long timeout) {
 		Process p = null;
 		Reader stdout = null;
 		Reader stderr = null;
 		try {
 			p = Runtime.getRuntime().exec(cmds);
-			int code = p.waitFor();
+			Integer code = null;
+			long before = System.currentTimeMillis();
+			long max = before + timeout;
+			while (code == null) {
+				code = code(p);
+				long now = System.currentTimeMillis();
+				if (now > max) {
+					throw new RuntimeException("timeout, max: " + timeout + ", but was: " + (now - before));
+				}
+				if (code == null) {
+					Util.sleep(10l);
+				}
+			}
 			stdout = new InputStreamReader(p.getInputStream(), "utf-8");
 			stderr = new InputStreamReader(p.getInputStream(), "utf-8");
 			Util.copyAll(stdout, out);
 			Util.copyAll(stderr, err);
-			return code;
+			return code.intValue();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		} finally {
 			Util.close(stdout);
 			Util.close(stderr);
 			Util.close(p);
+		}
+	}
+
+	private static Integer code(Process p) {
+		try {
+			return p.exitValue();
+		} catch (IllegalThreadStateException e) {
+			return null;
 		}
 	}
 }

@@ -11,6 +11,8 @@ public class PhantomJS {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PhantomJS.class);
 
+	private static final Long TIMEOUT = 5000l;
+
 	private PhantomJSInstaller installer;
 
 	public String getExecutable() {
@@ -30,11 +32,33 @@ public class PhantomJS {
 		this.installer = installer;
 	}
 
-	public String eval(String script) {
+	public String source(String file, Long timeout) {
+		if (timeout == null) {
+			timeout = TIMEOUT;
+		}
+		File script = new File(file);
+		StringBuilder out = new StringBuilder();
+		StringBuilder err = new StringBuilder();
+		ExecUtil.execAndWaitSuccess(new String[] { installer.getExecutable(), script.getPath() }, out, err, timeout);
+		return out.toString();
+	}
+
+	public String source(String file) {
+		return source(file, null);
+	}
+
+	public PhantomJSInstaller getInstaller() {
+		return installer;
+	}
+
+	public String eval(String script, Long timeout) {
+		if (timeout == null) {
+			timeout = TIMEOUT;
+		}
 		File scriptFile = Util.writeTempFile(script, "utf-8");
 		scriptFile.deleteOnExit();
 		try {
-			return source(scriptFile.getPath());
+			return source(scriptFile.getPath(), timeout);
 		} finally {
 			try {
 				scriptFile.delete();
@@ -44,16 +68,13 @@ public class PhantomJS {
 		}
 	}
 
-	public String source(String file) {
-		File script = new File(file);
-		StringBuilder out = new StringBuilder();
-		StringBuilder err = new StringBuilder();
-		ExecUtil.execAndWaitSuccess(new String[] { installer.getExecutable(), script.getPath() }, out, err);
-		return out.toString();
+	public String eval(String script) {
+		return eval(script, null);
 	}
 
-	public PhantomJSInstaller getInstaller() {
-		return installer;
+	@Override
+	public String toString() {
+		return "[PhantomJS " + installer + "]";
 	}
 
 }
