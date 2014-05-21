@@ -34,13 +34,14 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Util {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
+
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
 	public static void close(AutoCloseable resource) {
 		if (resource != null) {
@@ -191,8 +192,18 @@ public class Util {
 	}
 
 	public static void copyAll(InputStream in, OutputStream out) {
+		copyLarge(in, out, new byte[DEFAULT_BUFFER_SIZE]);
+	}
+
+	public static void copyLarge(InputStream in, OutputStream out, byte[] buffer) {
 		try {
-			IOUtils.copy(in, out);
+			int len = 0;
+			do {
+				len = in.read(buffer);
+				if (len > 0) {
+					out.write(buffer, 0, len);
+				}
+			} while (len >= 0);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -226,8 +237,18 @@ public class Util {
 	}
 
 	public static void copyAll(Reader in, Writer out) {
+		copyLarge(in, out, new char[DEFAULT_BUFFER_SIZE]);
+	}
+
+	public static void copyLarge(Reader in, Writer out, char[] buffer) {
 		try {
-			IOUtils.copy(in, out);
+			int len = 0;
+			do {
+				len = in.read(buffer);
+				if (len > 0) {
+					out.write(buffer, 0, len);
+				}
+			} while (len >= 0);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
