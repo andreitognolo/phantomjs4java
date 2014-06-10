@@ -4,13 +4,13 @@
 	<artifactId>phantomjs4java-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>phantomjs4java-parent</name>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<description>phantomjs4java-parent</description>
 
 	<parent>
 		<groupId>phantomjs4java</groupId>
 		<artifactId>phantomjs4java</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 
 	<dependencies>
