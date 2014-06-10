@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>phantomjs4java</groupId>
 		<artifactId>phantomjs4java-parent</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
 		<relativePath>../phantomjs4java-parent</relativePath>
 	</parent>
 
