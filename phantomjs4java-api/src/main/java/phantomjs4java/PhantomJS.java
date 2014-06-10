@@ -70,6 +70,10 @@ public class PhantomJS {
 			StringBuilder out = new StringBuilder();
 			StringBuilder err = new StringBuilder();
 			ExecUtil.execAndWaitSuccess(cmds, out, err, exec.getTimeout());
+			String strerr = Util.str(err);
+			if (strerr != null) {
+				LOG.info("Phantom strerr: " + strerr);
+			}
 			return out.toString();
 		} finally {
 			if (scriptFile != null) {

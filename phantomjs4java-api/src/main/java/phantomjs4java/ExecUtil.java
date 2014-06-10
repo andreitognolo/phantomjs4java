@@ -5,8 +5,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExecUtil {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ExecUtil.class);
 
 	public static String getOutputAsString(String... args) {
 		Process p = null;
@@ -42,6 +48,7 @@ public class ExecUtil {
 		Reader stdout = null;
 		Reader stderr = null;
 		try {
+			LOG.info("Executing timeout: " + timeout + ", command : " + Arrays.toString(cmds));
 			p = Runtime.getRuntime().exec(cmds);
 			Integer code = null;
 			long before = System.currentTimeMillis();
